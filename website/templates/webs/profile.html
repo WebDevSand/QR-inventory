@@ -1,0 +1,81 @@
+{% extends "base_web.html" %}
+
+{% block title %}
+    QR Inventory |  {{user}}'s Profile
+{% endblock %}
+
+{% block customcss %}
+{% load staticfiles %}
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <section class="py-5">
+        <div class="container">
+            <h3>My Inventory
+                    <a href="{% url 'create_item' %}" class="btn btn-primary">Create New Item</a>
+                    <a href="{% url 'search_item' %}" class="btn btn-primary">Search Your Items with QR Codes</a>
+            </h3>
+            
+            <div class="row">
+                {% for item in items %}
+                <div class="col-3">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ item.qrcode.url }}" alt="QR Code">
+                        <div class="card-body">
+                            <h5 class="card-title">Item Name: {{ item.name }} |
+                            {% if item.privacy == 'Private' %}
+                                <span class="badge badge-pill badge-success"> {{ item.privacy }} </span>
+                            {% else %}
+                               <span class="badge badge-pill badge-info"> {{ item.privacy }} </span>
+                            {% endif %}</h5>
+                            <hr>
+                            <a href="{% url 'show_item' item.id %}" class="btn btn-primary">Details</a> 
+                            <a href="{% url 'edit_item' item.id %}" class="btn btn-secondary">Edit</a>
+
+                            <!-- Button to Open the Modal -->
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                                    Delete
+                            </button>
+                                
+                            <!-- The Modal -->
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                            
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                    <h4 class="modal-title">Delete Item?</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                            
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                    Are you sure?
+                                    </div>
+                            
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                    <a type="button" href="{% url 'delete_item' item.id %}" class="btn btn-danger">Yes</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                            
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}  
+             </div> 
+        </div>
+    </section>
+    <br><br><br><br>  <br><br><br><br>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base_web.html" %}
+
+
+{% block title %}
+    QR Inventory | Search Item
+{% endblock %}
+
+{% block customcss %}
+{% load staticfiles %}
+<style>
+     .body {
+        padding-top: 0px;
+        }
+    
+        #content-main {
+            padding: 19px 29px 29px;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            margin-bottom: 100px;
+        }
+    
+
+</style>
+{% endblock %}
+
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main">
+        <section class="py-5">
+                <div class="container">
+                    <h3>Search Results
+                            <a href="{% url 'search_item' %}" class="btn btn-primary">Search Again</a>
+                    </h3>
+                    {% if items.count > 0%}
+                    <div class="row">
+                        {% for item in items %}
+                        <div class="col-3">
+                            <div class="card" style="width: 18rem;">
+                                <img class="card-img-top" src="{{ item.qrcode.url }}" alt="QR Code">
+                                <div class="card-body">
+                                    <h5 class="card-title">Item Name: {{ item.name }} |
+                                    {% if item.privacy == 'Private' %}
+                                        <span class="badge badge-pill badge-success"> {{ item.privacy }} </span>
+                                    {% else %}
+                                        <span class="badge badge-pill badge-info"> {{ item.privacy }} </span>
+                                    {% endif %}</h5>
+                                    Owner: {{ item.owner }}
+                                    <hr>
+                                    <a href="{% url 'show_item' item.id %}" class="btn btn-primary">Details</a> 
+                                    {% if request.user == item.owner %}
+                                        <a href="#" class="btn btn-secondary">Edit</a> 
+                                        <a href="#" class="btn btn-danger">Detete</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}  
+                     </div> 
+                     {% else %}
+                        No Matching Results
+                     {% endif %}
+                </div>
+            </section>
+</div>
+{%  endblock %}

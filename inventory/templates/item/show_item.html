@@ -1,0 +1,53 @@
+{% extends "base_web.html" %}
+
+{% block title %}
+    QR Inventory |  Inventory Items
+{% endblock %}
+
+{% block customcss %}
+{% load staticfiles %}
+<style>
+    .item-box{
+        background-color: #9ec0f35c;
+        padding: 20px;
+        min-height: 280px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="py-5">
+        <div class="container">
+            {% if item.privacy == 'Private' and item.owner != request.user %}
+                This content is private! You can't view this without permission!
+            {% else %}
+            <div class="row item-box">
+                <div class="col-8">
+                    <strong>Item Name: </strong> {{ item.name }} <br>
+                    <strong>Item Type: </strong> {{ item.type }} <br>
+                    <strong>Owner: </strong> {{ item.owner }} <br>
+                    <strong>Privacy: </strong>
+                    {% if item.privacy == 'Private' %}
+                        <span class="badge badge-pill badge-light"> {{ item.privacy }} </span>
+                    {% else %}
+                        <span class="badge badge-pill badge-info"> {{ item.privacy }} </span>
+                    {% endif %}
+                    
+                    <p> <strong>Description: </strong> {{ item.desc }} </p>
+
+                    {% if request.user == item.owner %}
+                        <a href="#" class="btn btn-secondary">Edit</a> 
+                        <a href="#" class="btn btn-danger">Detete</a>
+                    {% endif %}
+                </div>
+
+                <div class="col-4 text-center">
+                    <strong> Item QR Code </strong> <br>
+                    <img  src="{{ item.qrcode.url }}" alt="QR Code">
+                </div>
+             </div> 
+             {% endif %}
+        </div>
+    </section>
+    <br><br><br><br>  <br><br><br><br>
+{% endblock %}
